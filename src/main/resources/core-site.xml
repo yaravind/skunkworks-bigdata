@@ -3,6 +3,10 @@
 <configuration>
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://localhost/</value>
+        <value>hdfs://localhost:9000</value>
+        <!--
+        file:///
+        hdfs://localhost/
+        -->
     </property>
 </configuration>
