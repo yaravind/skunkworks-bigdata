@@ -10,9 +10,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 object DedupeApp {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("DedupeApp")
-    conf.set("spark.cleaner.ttl", "120000")
+
     conf.set("spark.eventLog.enabled", "true")
-    conf.set("spark.eventLog.dir", "/tmp/event-log")
+    conf.set("spark.eventLog.dir", "/tmp/spark-events")
 
     val sc = new SparkContext(conf)
 
@@ -32,7 +32,11 @@ object DedupeApp {
       println("t._1=" + t._1, "t._2=" + t._2)
     })*/
 
+    val totalRecs = sc.longAccumulator("Total records")
+    val dupeRecs = sc.longAccumulator("Duplicate records")
+
     val keyedRdd = originalRdd.map(t => {
+      totalRecs.add(1)
       val splits = t._2.toString.split(",")
       (splits(0), (splits(1), splits(2)))
     })
